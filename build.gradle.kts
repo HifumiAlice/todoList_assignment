@@ -31,6 +31,10 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0") // swagger 사용
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa") // transaction 및 jpa
+    runtimeOnly("org.postgresql:postgresql") // postgresql DB에 연결
 }
 
 tasks.withType<KotlinCompile> {
