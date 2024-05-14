@@ -1,0 +1,7 @@
+#spring.application.name=TODOList
+#
+spring:
+  datasource:
+    url: jdbc:postgresql://aws-0-ap-northeast-2.pooler.supabase.com:5432/postgres
+    username: postgres.cfyhumrdjfdajbhoevvs
+    password: SpartaToDoList
