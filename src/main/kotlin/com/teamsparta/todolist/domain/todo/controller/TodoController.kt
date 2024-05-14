@@ -3,36 +3,47 @@ package com.teamsparta.todolist.domain.todo.controller
 import com.teamsparta.todolist.domain.todo.dto.TodoCreateRequest
 import com.teamsparta.todolist.domain.todo.dto.TodoResponse
 import com.teamsparta.todolist.domain.todo.dto.TodoUpdateRequest
+import com.teamsparta.todolist.domain.todo.service.TodoService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 
 @RequestMapping("/todos")
 @RestController
-class TodoController {
+class TodoController (private val todoService : TodoService) {
 
     @PostMapping()
-    fun createPosting(@RequestBody request : TodoCreateRequest) : ResponseEntity<TodoResponse> {
-        TODO("Not yet implemented")
+    fun createTodo(@RequestBody request : TodoCreateRequest) : ResponseEntity<TodoResponse> {
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(todoService.createTodo(request))
     }
 
     @GetMapping()
-    fun getCardAll() : ResponseEntity<TodoResponse> {
-        TODO("Not yet implemented")
+    fun getTodos() : ResponseEntity<List<TodoResponse>> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(todoService.getTodos())
     }
 
     @GetMapping("/{id}")
-    fun getCardById(@PathVariable id : Long) : ResponseEntity<TodoResponse> {
-        TODO("Not yet implemented")
+    fun getTodo(@PathVariable id : Long) : ResponseEntity<TodoResponse> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(todoService.getTodoById(id))
     }
 
     @PutMapping("/{id}")
-    fun updateCard(@PathVariable id : Long, @RequestBody request : TodoUpdateRequest) : ResponseEntity<TodoResponse> {
-        TODO("Not yet implemented")
+    fun updateTodo(@PathVariable id : Long, @RequestBody request : TodoUpdateRequest) : ResponseEntity<TodoResponse> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(todoService.updateTodoById(id, request))
     }
 
     @DeleteMapping("/{id}")
     fun deleteCardById(@PathVariable id : Long) : ResponseEntity<Unit> {
-        TODO("Not yet implemented")
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(todoService.deleteTodoById(id))
     }
 }
