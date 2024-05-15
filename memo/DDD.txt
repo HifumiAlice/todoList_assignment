@@ -1,0 +1,50 @@
+Step1에 대한 DDD(Domain Driven Design)를 작성하는 중 --> 나중에 step이 증가될 때 내용이 수정될 수 있음.
+
+1. 액터 정의
+    사용자 - 글(ToDoList)를 작성함
+
+2. Domain Event 나열
+    할 일 카드(ToDoList)
+    ToDoList 생성됨
+    ToDoList 조회됨
+    ToDoList 수정됨
+    ToDoList 삭제됨
+
+3. Command 설정
+    할 일 카드(ToDoList)
+    ToDoList 생성됨
+    ToDoList 조회됨
+    ToDoList 수정됨
+    ToDoList 삭제됨
+
+4. External System 표시
+    현재는 없음
+    제목, 내용, 날짜, 작성자 이름은 db에 저장 가능함
+    나중에 필요한 파일이 생길 시 외부 시스템 필요?
+
+5. Actor 표기
+    사용자는 생성, 조회, 수정, 삭제 모두 가능함
+
+7. Event Grouping 및 Model, Aggregate 정의
+    ToDoList Model
+        ToDoList 생성됨
+        ToDoList 조회됨
+        ToDoList 수정됨
+        ToDoList 삭제됨
+
+    Aggregate
+        ToDoList 생성됨
+        ToDoList 조회됨
+        ToDoList 수정됨
+        ToDoList 삭제됨
+
+8. BoundedContext 정의
+
+9. Data 정의
+
+    ToDoList
+        Id : Long
+        Title : String
+        Content : String
+        Date --> 일단 String으로 구현
+        Writer : String
