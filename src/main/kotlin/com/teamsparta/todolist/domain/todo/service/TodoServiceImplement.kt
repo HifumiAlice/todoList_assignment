@@ -1,5 +1,6 @@
 package com.teamsparta.todolist.domain.todo.service
 
+import com.teamsparta.todolist.domain.exception.ModelNotFoundException
 import com.teamsparta.todolist.domain.todo.dto.TodoCreateRequest
 import com.teamsparta.todolist.domain.todo.dto.TodoResponse
 import com.teamsparta.todolist.domain.todo.dto.TodoUpdateRequest
@@ -7,6 +8,7 @@ import com.teamsparta.todolist.domain.todo.model.Todo
 import com.teamsparta.todolist.domain.todo.model.toResponse
 import com.teamsparta.todolist.domain.todo.repository.TodoRepository
 import jakarta.transaction.Transactional
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 
@@ -28,13 +30,18 @@ class TodoServiceImplement(private val todoRepository : TodoRepository) : TodoSe
 
     override fun getTodos(): List<TodoResponse> {
         // TODO : DB에서 Todo 목록 가져와서 보여주기
-        TODO("Not yet implemented")
+        // TODO : 정렬하기 --> 할 거 다 하고 구현하기
+        return todoRepository.findAll().map { it.toResponse() }
     }
 
     override fun getTodoById(id: Long): TodoResponse {
         // TODO : DB에서 원하는 Todo 가져오기
         // TODO : 만약 Id가 없으면 예외처리
-        TODO("Not yet implemented")
+
+        val todo : Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo",id)
+
+        return todo.toResponse()
+
     }
 
     @Transactional
