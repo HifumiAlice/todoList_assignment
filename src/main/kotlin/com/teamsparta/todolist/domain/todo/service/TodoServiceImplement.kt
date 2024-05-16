@@ -20,6 +20,9 @@ class TodoServiceImplement(private val todoRepository : TodoRepository) : TodoSe
         // TODO : 구성요소가 잘 맞는지 확인하기 --> 요청이 잘못들어오면 애초에 거절됨
         // TODO : db에 Todo 저장하고 데이터 반환
 
+        if (request.title.isEmpty()) throw IllegalStateException("Invalid title that is empty")
+        if (request.writer.isEmpty()) throw IllegalStateException("Invalid writer that is empty")
+
         val todo : Todo = Todo(title = request.title,
             content = request.content,
             date = request.date,
@@ -48,8 +51,18 @@ class TodoServiceImplement(private val todoRepository : TodoRepository) : TodoSe
     override fun updateTodoById(id: Long, request: TodoUpdateRequest): TodoResponse {
         // TODO : DB에서 Todo 가져와서 데이터 수정하고 다시 저장하기
         // TODO : 만약 Id가 없으면 예외처리
+        val todo : Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo",id)
 
-        TODO("Not yet implemented")
+        if (request.title.isEmpty()) throw IllegalStateException("Invalid title that is empty")
+        if (request.writer.isEmpty()) throw IllegalStateException("Invalid writer that is empty")
+
+        todo.title = request.title
+        todo.content = request.content
+        todo.writer = request.writer
+        todoRepository.save(todo)
+
+
+        return todo.toResponse()
     }
 
     @Transactional
