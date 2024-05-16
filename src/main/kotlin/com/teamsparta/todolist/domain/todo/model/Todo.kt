@@ -25,6 +25,8 @@ open class Todo {
     @Column(name = "writer", nullable = false)
     open var writer : String = ""
 
+    open var achievement : Boolean = false
+
     constructor( title: String, content: String, date: LocalDateTime, writer: String) {
         this.title = title
         this.content = content
@@ -40,6 +42,7 @@ fun Todo.toResponse() : TodoResponse {
         title = title,
         content = content,
         date = date,
-        writer = writer
+        writer = writer,
+        achievement = achievement
     )
 }

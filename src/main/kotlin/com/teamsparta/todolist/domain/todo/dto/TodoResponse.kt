@@ -11,5 +11,6 @@ data class TodoResponse (
     val content : String,
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     val date : LocalDateTime,
-    val writer : String
+    val writer : String,
+    val achievement : Boolean = false
 )

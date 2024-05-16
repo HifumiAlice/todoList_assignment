@@ -54,6 +54,9 @@ class TodoServiceImplement(private val todoRepository : TodoRepository) : TodoSe
     override fun updateTodoById(id: Long, request: TodoUpdateRequest): TodoResponse {
         // TODO : DB에서 Todo 가져와서 데이터 수정하고 다시 저장하기
         // TODO : 만약 Id가 없으면 예외처리
+
+
+
         val todo : Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo",id)
 
         if (request.title.isEmpty()) throw IllegalStateException("Invalid title that is empty")
@@ -72,9 +75,21 @@ class TodoServiceImplement(private val todoRepository : TodoRepository) : TodoSe
     override fun deleteTodoById(id: Long) {
         // TODO : DB에서 Todo 가져와서 삭제하기
         // TODO : 만약 Id가 없다면 예외처리
+        todoRepository.delete(todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo",id))
 
-        return todoRepository.delete(todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo",id))
+    }
 
+    @Transactional
+    override fun updateTodoByIdByAchievement(id: Long, request: Boolean): TodoResponse {
+        // TODO : DB에서 Todo 가져와서 달성여부 수정하기
+        // TODO : 만약 Id가 없다면 예외처리
+        val todo : Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo",id)
+
+        todo.achievement = request
+
+        todoRepository.save(todo)
+
+        return todo.toResponse()
     }
 
 }

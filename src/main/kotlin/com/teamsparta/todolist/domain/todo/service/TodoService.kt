@@ -10,4 +10,5 @@ interface TodoService {
     fun getTodoById(id: Long) : TodoResponse
     fun updateTodoById(id : Long, request : TodoUpdateRequest) : TodoResponse
     fun deleteTodoById(id : Long)
+    fun updateTodoByIdByAchievement(id : Long, request : Boolean) : TodoResponse
 }
