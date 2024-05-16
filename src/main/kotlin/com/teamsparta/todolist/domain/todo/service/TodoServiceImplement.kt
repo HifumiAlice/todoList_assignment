@@ -69,7 +69,9 @@ class TodoServiceImplement(private val todoRepository : TodoRepository) : TodoSe
     override fun deleteTodoById(id: Long) {
         // TODO : DB에서 Todo 가져와서 삭제하기
         // TODO : 만약 Id가 없다면 예외처리
-        TODO("Not yet implemented")
+
+        return todoRepository.delete(todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo",id))
+
     }
 
 }
