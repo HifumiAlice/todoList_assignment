@@ -5,3 +5,20 @@ spring:
     url: jdbc:postgresql://aws-0-ap-northeast-2.pooler.supabase.com:5432/postgres
     username: postgres.cfyhumrdjfdajbhoevvs
     password: SpartaToDoList
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql : true
+        highlight_sql : true
+
+
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
+        orm:
+          jdbc:
+            bind: trace

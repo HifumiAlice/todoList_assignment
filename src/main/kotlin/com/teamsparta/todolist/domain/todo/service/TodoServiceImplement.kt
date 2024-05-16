@@ -3,18 +3,27 @@ package com.teamsparta.todolist.domain.todo.service
 import com.teamsparta.todolist.domain.todo.dto.TodoCreateRequest
 import com.teamsparta.todolist.domain.todo.dto.TodoResponse
 import com.teamsparta.todolist.domain.todo.dto.TodoUpdateRequest
+import com.teamsparta.todolist.domain.todo.model.Todo
+import com.teamsparta.todolist.domain.todo.model.toResponse
+import com.teamsparta.todolist.domain.todo.repository.TodoRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
 
 @Service
-class TodoServiceImplement : TodoService {
+class TodoServiceImplement(private val todoRepository : TodoRepository) : TodoService {
 
     @Transactional
     override fun createTodo(request: TodoCreateRequest): TodoResponse {
-        // TODO : 구성요소가 잘 맞는지 확인하기
+        // TODO : 구성요소가 잘 맞는지 확인하기 --> 요청이 잘못들어오면 애초에 거절됨
         // TODO : db에 Todo 저장하고 데이터 반환
-        TODO("Not yet implemented")
+
+        val todo : Todo = Todo(title = request.title,
+            content = request.content,
+            date = request.date,
+            writer = request.writer)
+        todoRepository.save(todo)
+        return todo.toResponse()
     }
 
     override fun getTodos(): List<TodoResponse> {

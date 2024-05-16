@@ -11,19 +11,19 @@ open class Todo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id : Long? = null
+    open var id : Long? = null
 
     @Column(name="title", nullable = false)
-    var title : String = ""
+    open var title : String = ""
 
     @Column(name = "content" , nullable = false)
-    var content : String = ""
+    open var content : String = ""
 
     @Column(name="date", nullable = false)
-    var date : LocalDateTime = LocalDateTime.now()
+    open var date : LocalDateTime = LocalDateTime.now()
 
     @Column(name = "writer", nullable = false)
-    var writer : String = ""
+    open var writer : String = ""
 
     constructor( title: String, content: String, date: LocalDateTime, writer: String) {
         this.title = title

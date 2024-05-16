@@ -7,6 +7,6 @@ data class TodoCreateRequest (
     val title : String,
     val content : String,
     @DateTimeFormat(pattern = "yyyy-MM-ddHH:mm:ss")
-    val date : LocalDateTime,
+    val date : LocalDateTime = LocalDateTime.now(),
     val writer : String
 )
