@@ -27,14 +27,17 @@ class TodoServiceImplement(private val todoRepository : TodoRepository) : TodoSe
             content = request.content,
             date = request.date,
             writer = request.writer)
+
         todoRepository.save(todo)
+
         return todo.toResponse()
     }
 
     override fun getTodos(): List<TodoResponse> {
         // TODO : DB에서 Todo 목록 가져와서 보여주기
         // TODO : 정렬하기 --> 할 거 다 하고 구현하기
-        return todoRepository.findAll().map { it.toResponse() }
+//        return todoRepository.findAll().map { it.toResponse() } // db에서 저장된 순으로 불러옴
+        return todoRepository.findAllByOrderByDateDesc().map { it.toResponse() }
     }
 
     override fun getTodoById(id: Long): TodoResponse {
@@ -69,7 +72,9 @@ class TodoServiceImplement(private val todoRepository : TodoRepository) : TodoSe
     override fun deleteTodoById(id: Long) {
         // TODO : DB에서 Todo 가져와서 삭제하기
         // TODO : 만약 Id가 없다면 예외처리
-        TODO("Not yet implemented")
+
+        return todoRepository.delete(todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo",id))
+
     }
 
 }
