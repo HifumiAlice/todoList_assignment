@@ -1,0 +1,9 @@
+step1 api
+
+todo api
+Command                 Method      Status Code         URI
+할 일 단건 생성하기        post           201             /todos
+할 일 목록 조회하기        get            200             /todos
+할 일 단건 조회하기        get            200             /todos/{id}
+할 일 단건 수정하기        put            200             /todos/{id}
+할 일 단건 삭제하기        delete         200             /todos/{id}
