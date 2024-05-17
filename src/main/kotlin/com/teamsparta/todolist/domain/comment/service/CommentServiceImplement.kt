@@ -45,7 +45,28 @@ class CommentServiceImplement(
 
     @Transactional
     override fun updateComment(id: Long,commentId : Long, request: CommentUpdateRequest): CommentResponse {
-        TODO("Not yet implemented")
+
+        // TODO : todo id 확인 없으면 throw
+        // TODO : comment id 확인 없으면 throw
+        // TODO : todo에 comment가 없으면 throw
+        // TODO : comment의 writer와 password가 하나라도 다르면 throw
+        // TODO : 내용 수정
+
+        val todo : Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
+        val comment : Comment = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", id)
+
+        todo.comments.find ({ it : Comment -> it == comment }) ?: throw IllegalStateException("todo doesn't have comment")
+
+
+        if (request.writer != comment.writer) {
+            throw IllegalStateException("Wrong writer")
+        } else if (request.password != comment.password) {
+            throw IllegalStateException("Wrong password")
+        }
+
+        comment.comment = request.comment
+        commentRepository.save(comment)
+        return comment.toResponse()
     }
 
     @Transactional
