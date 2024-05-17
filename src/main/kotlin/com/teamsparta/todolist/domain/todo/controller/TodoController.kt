@@ -36,10 +36,12 @@ class TodoController (private val todoService : TodoService) {
     }
 
     @PutMapping("/{id}")
-    fun updateTodo(@PathVariable("id") id : Long, @RequestBody request : TodoUpdateRequest) : ResponseEntity<TodoResponse> {
+    fun updateTodo(@PathVariable("id") id : Long, @RequestParam(name = "achievement") achievement : Boolean = false,
+                   @RequestBody request : TodoUpdateRequest)
+    : ResponseEntity<TodoResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(todoService.updateTodoById(id, request ))
+            .body(todoService.updateTodoById(id, request, achievement ))
     }
 
     @DeleteMapping("/{id}")
@@ -49,12 +51,4 @@ class TodoController (private val todoService : TodoService) {
             .body(todoService.deleteTodoById(id))
     }
 
-    @PutMapping("/{id}/achievements")
-    fun todoAchieve(@PathVariable("id") id : Long, @RequestParam(value = "achievement") achievement : Boolean, @RequestParam(name = "test") test:String?) : ResponseEntity<TodoResponse> {
-        /*
-        TODO : 현재는 API가 분리되어 있음 --> 추후 updateTodo에 합칠 예정
-        */
-
-        return ResponseEntity.status(HttpStatus.OK).body(todoService.updateTodoByIdByAchievement(id,achievement ))
-    }
 }

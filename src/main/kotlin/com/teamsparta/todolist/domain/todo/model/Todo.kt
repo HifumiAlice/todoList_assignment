@@ -43,7 +43,7 @@ class Todo (
 
 }
 
-fun Todo.toResponse(isAll : Boolean = false) : TodoResponse {
+fun Todo.toResponse(isAll : Boolean = true) : TodoResponse {
     when(isAll) {
         true -> {
             return TodoResponse(

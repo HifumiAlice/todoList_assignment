@@ -41,7 +41,7 @@ class TodoServiceImplement(
         // TODO : DB에서 Todo 목록 가져와서 보여주기
         // TODO : 정렬하기 --> 할 거 다 하고 구현하기
 //        return todoRepository.findAll().map { it.toResponse() } // db에서 저장된 순으로 불러옴
-        return todoRepository.findAllByOrderByDateDesc().map { it.toResponse(true) }
+        return todoRepository.findAllByOrderByDateDesc().map { it.toResponse() }
     }
 
     override fun getTodoById(id: Long): TodoResponse {
@@ -50,25 +50,35 @@ class TodoServiceImplement(
 
         val todo : Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo",id)
 
-        return todo.toResponse()
+        return todo.toResponse(false)
 
     }
 
     @Transactional
-    override fun updateTodoById(id: Long, request: TodoUpdateRequest): TodoResponse {
+    override fun updateTodoById(id: Long, request: TodoUpdateRequest, achievement : Boolean): TodoResponse {
         // TODO : DB에서 Todo 가져와서 데이터 수정하고 다시 저장하기
         // TODO : 만약 Id가 없으면 예외처리
+
+        // TODO : 추가사항 --> 완료 여부 수정 // Policy : 완료 체크하면 수정 불가 --> 완료 전 상태로 못 돌아감
+        // TODO : 완료되면 내용 수정 불가
+
 
 
 
         val todo : Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo",id)
 
-        if (request.title.isEmpty()) throw IllegalStateException("Invalid title that is empty")
-        if (request.writer.isEmpty()) throw IllegalStateException("Invalid writer that is empty")
+        if (todo.achievement == true) throw IllegalStateException("Already achievement is true")
 
-        todo.title = request.title
-        todo.content = request.content
-        todo.writer = request.writer
+        if(achievement == true) todo.achievement = true
+        else {
+            if (request.title.isEmpty()) throw IllegalStateException("Invalid title that is empty")
+            if (request.writer.isEmpty()) throw IllegalStateException("Invalid writer that is empty")
+
+            todo.title = request.title
+            todo.content = request.content
+            todo.writer = request.writer
+        }
+
         todoRepository.save(todo)
 
 
@@ -83,17 +93,5 @@ class TodoServiceImplement(
 
     }
 
-    @Transactional
-    override fun updateTodoByIdByAchievement(id: Long, request: Boolean): TodoResponse {
-        // TODO : DB에서 Todo 가져와서 달성여부 수정하기
-        // TODO : 만약 Id가 없다면 예외처리
-        val todo : Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo",id)
-
-        todo.achievement = request
-
-        todoRepository.save(todo)
-
-        return todo.toResponse()
-    }
 
 }
