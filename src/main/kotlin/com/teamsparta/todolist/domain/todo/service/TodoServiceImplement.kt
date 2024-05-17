@@ -41,7 +41,7 @@ class TodoServiceImplement(
         // TODO : DB에서 Todo 목록 가져와서 보여주기
         // TODO : 정렬하기 --> 할 거 다 하고 구현하기
 //        return todoRepository.findAll().map { it.toResponse() } // db에서 저장된 순으로 불러옴
-        return todoRepository.findAllByOrderByDateDesc().map { it.toResponse() }
+        return todoRepository.findAllByOrderByDateDesc().map { it.toResponse(true) }
     }
 
     override fun getTodoById(id: Long): TodoResponse {
