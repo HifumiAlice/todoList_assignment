@@ -1,6 +1,7 @@
 package com.teamsparta.todolist.domain.comment.controller
 
 import com.teamsparta.todolist.domain.comment.dto.CommentCreateRequest
+import com.teamsparta.todolist.domain.comment.dto.CommentDeleteRequest
 import com.teamsparta.todolist.domain.comment.dto.CommentResponse
 import com.teamsparta.todolist.domain.comment.dto.CommentUpdateRequest
 import com.teamsparta.todolist.domain.comment.service.CommentService
@@ -9,7 +10,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 
-@RequestMapping("/todos/{id}/")
+@RequestMapping("/todos/{id}")
 @RestController
 class CommentController(private val commentService : CommentService) {
 
@@ -26,8 +27,10 @@ class CommentController(private val commentService : CommentService) {
     }
 
     @DeleteMapping("/{comment-id}")
-    fun deleteComment(@PathVariable id : Long, @PathVariable(name = "comment-id") commentId : Long) : ResponseEntity<Unit> {
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.deleteComment(id, commentId))
+    fun deleteComment(@PathVariable id : Long, @PathVariable(name = "comment-id") commentId : Long,
+                      @RequestBody request : CommentDeleteRequest
+    ) : ResponseEntity<Unit> {
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.deleteComment(id, commentId, request))
     }
 
 }

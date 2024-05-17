@@ -1,6 +1,7 @@
 package com.teamsparta.todolist.domain.comment.service
 
 import com.teamsparta.todolist.domain.comment.dto.CommentCreateRequest
+import com.teamsparta.todolist.domain.comment.dto.CommentDeleteRequest
 import com.teamsparta.todolist.domain.comment.dto.CommentResponse
 import com.teamsparta.todolist.domain.comment.dto.CommentUpdateRequest
 import com.teamsparta.todolist.domain.comment.model.Comment
@@ -70,7 +71,24 @@ class CommentServiceImplement(
     }
 
     @Transactional
-    override fun deleteComment(id: Long, commentId : Long) : Unit{
-        TODO("Not yet implemented")
+    override fun deleteComment(id: Long, commentId : Long, request : CommentDeleteRequest) : Unit{
+        // TODO : todo id 확인 없으면 throw
+        // TODO : comment id 확인 없으면 throw
+        // TODO : todo에 comment가 없으면 throw
+        // TODO : comment의 writer와 password가 하나라도 다르면 throw
+        // TODO : 내용 삭제
+
+        val todo : Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
+        val comment : Comment = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", id)
+
+        todo.comments.find { it == comment } ?: throw IllegalStateException("todo doesn't have comment")
+
+
+        if (request.writer != comment.writer || request.password != comment.password)
+            throw IllegalStateException("Wrong writer or password")
+
+        todo.comments.remove(comment)
+        todoRepository.save(todo)
+
     }
 }
