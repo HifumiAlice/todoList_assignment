@@ -1,5 +1,6 @@
 package com.teamsparta.todolist.domain.todo.service
 
+import com.teamsparta.todolist.domain.comment.repository.CommentRepository
 import com.teamsparta.todolist.domain.exception.ModelNotFoundException
 import com.teamsparta.todolist.domain.todo.dto.TodoCreateRequest
 import com.teamsparta.todolist.domain.todo.dto.TodoResponse
@@ -13,7 +14,10 @@ import org.springframework.stereotype.Service
 
 
 @Service
-class TodoServiceImplement(private val todoRepository : TodoRepository) : TodoService {
+class TodoServiceImplement(
+    private val todoRepository : TodoRepository,
+    private val commentRepository : CommentRepository
+) : TodoService {
 
     @Transactional
     override fun createTodo(request: TodoCreateRequest): TodoResponse {
