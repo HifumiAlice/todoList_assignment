@@ -56,8 +56,9 @@ class CommentServiceImpl(
         val todo : Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
         val comment : Comment = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", id)
 
-        todo.comments.find ({ it : Comment -> it == comment }) ?: throw IllegalStateException("todo doesn't have comment")
-
+        val isCommentBelongTodo : (it : Comment) -> Boolean = {it -> it==comment}
+//        todo.comments.find ({ it : Comment -> it == comment }) ?: throw IllegalStateException("todo doesn't have comment")
+        todo.comments.find (isCommentBelongTodo) ?: throw IllegalStateException("Todo doesn't have comment")
 
         if (request.writer != comment.writer) {
             throw IllegalStateException("Wrong writer")
