@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service
 
 
 @Service
-class TodoServiceImplement(
+class TodoServiceImpl(
     private val todoRepository : TodoRepository,
     private val commentRepository : CommentRepository
 ) : TodoService {
