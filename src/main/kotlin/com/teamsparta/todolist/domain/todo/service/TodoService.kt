@@ -8,6 +8,7 @@ interface TodoService {
     fun createTodo(request : TodoCreateRequest) : TodoResponse
     fun getTodos() : List<TodoResponse>
     fun getTodoById(id: Long) : TodoResponse
-    fun updateTodoById(id : Long, request : TodoUpdateRequest) : TodoResponse
+    fun updateTodoById(id : Long, request : TodoUpdateRequest, achievement: Boolean) : TodoResponse
     fun deleteTodoById(id : Long)
+
 }

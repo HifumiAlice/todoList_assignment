@@ -1,45 +1,71 @@
 package com.teamsparta.todolist.domain.todo.model
 
+import com.teamsparta.todolist.domain.comment.model.Comment
+import com.teamsparta.todolist.domain.comment.model.toResponse
 import com.teamsparta.todolist.domain.todo.dto.TodoResponse
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
 @Table(name="todo")
-open class Todo {
-    constructor()
+class Todo (
+    @Column(name="title", nullable = false)
+    var title : String = "",
+
+    @Column(name = "content" , nullable = false)
+    var content : String = "",
+
+    @Column(name="date", nullable = false)
+    var date : LocalDateTime = LocalDateTime.now(),
+
+    @Column(name = "writer", nullable = false)
+    var writer : String = "",
+
+    @Column(name = "achievement", nullable = false)
+    var achievement : Boolean = false,
+
+    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "todo_id", nullable = false)
+    var comments : MutableList<Comment> = mutableListOf()
+){
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    open var id : Long? = null
+    var id : Long? = null
 
-    @Column(name="title", nullable = false)
-    open var title : String = ""
+    fun addComment(comment: Comment) {
+        this.comments.add(comment)
+    }
 
-    @Column(name = "content" , nullable = false)
-    open var content : String = ""
-
-    @Column(name="date", nullable = false)
-    open var date : LocalDateTime = LocalDateTime.now()
-
-    @Column(name = "writer", nullable = false)
-    open var writer : String = ""
-
-    constructor( title: String, content: String, date: LocalDateTime, writer: String) {
-        this.title = title
-        this.content = content
-        this.date = date
-        this.writer = writer
+    fun removeComment(comment: Comment) {
+        this.comments.remove(comment)
     }
 
 }
 
-fun Todo.toResponse() : TodoResponse {
-    return TodoResponse(
-        id = id!!,
-        title = title,
-        content = content,
-        date = date,
-        writer = writer
-    )
+fun Todo.toResponse(isAll : Boolean = true) : TodoResponse {
+    when(isAll) {
+        true -> {
+            return TodoResponse(
+                id = id!!,
+                title = title,
+                content = content,
+                date = date,
+                writer = writer,
+                achievement = achievement
+            )
+        }
+        false -> {
+            return TodoResponse(
+                id = id!!,
+                title = title,
+                content = content,
+                date = date,
+                writer = writer,
+                achievement = achievement,
+                comments = comments.map{it.toResponse()}.toList()
+            )
+        }
+    }
+
 }
