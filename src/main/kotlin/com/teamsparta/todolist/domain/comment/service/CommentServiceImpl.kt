@@ -54,7 +54,7 @@ class CommentServiceImpl(
         // TODO : 내용 수정
 
         val todo : Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
-        val comment : Comment = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", id)
+        val comment : Comment = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", commentId)
 
         val isCommentBelongTodo : (it : Comment) -> Boolean = {it -> it==comment}
 //        todo.comments.find ({ it : Comment -> it == comment }) ?: throw IllegalStateException("todo doesn't have comment")
@@ -80,9 +80,9 @@ class CommentServiceImpl(
         // TODO : 내용 삭제
 
         val todo : Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
-        val comment : Comment = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", id)
+        val comment : Comment = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", commentId)
 
-        todo.comments.find { it == comment } ?: throw IllegalStateException("todo doesn't have comment")
+        todo.comments.find { it == comment } ?: throw IllegalStateException("Todo doesn't have comment")
 
 
         if (request.writer != comment.writer || request.password != comment.password)
