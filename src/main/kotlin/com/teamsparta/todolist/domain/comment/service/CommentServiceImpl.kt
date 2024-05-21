@@ -88,7 +88,7 @@ class CommentServiceImpl(
         if (request.writer != comment.writer || request.password != comment.password)
             throw IllegalStateException("Wrong writer or password")
 
-        todo.comments.remove(comment)
+        todo.removeComment(comment)
         todoRepository.save(todo)
 
     }
