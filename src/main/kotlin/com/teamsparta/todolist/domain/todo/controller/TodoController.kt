@@ -22,10 +22,11 @@ class TodoController (private val todoService : TodoService) {
     }
 
     @GetMapping()
-    fun getTodos() : ResponseEntity<List<TodoResponse>> {
+    fun getTodos(@RequestParam(value = "orderByTime") orderByTime : Boolean = true,
+                 @RequestParam(value = "findWriter") writer : String = "" ) : ResponseEntity<List<TodoResponse>> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(todoService.getTodos())
+            .body(todoService.getTodos(orderByTime,writer))
     }
 
     @GetMapping("/{id}")
