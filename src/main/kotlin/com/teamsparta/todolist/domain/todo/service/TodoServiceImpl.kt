@@ -36,11 +36,20 @@ class TodoServiceImpl(
         return todo.toResponse()
     }
 
-    override fun getTodos(): List<TodoResponse> {
+    override fun getTodos(orderByTime : Boolean, writer : String): List<TodoResponse> {
         // TODO : DB에서 Todo 목록 가져와서 보여주기
         // TODO : 정렬하기 --> 할 거 다 하고 구현하기
-//        return todoRepository.findAll().map { it.toResponse() } // db에서 저장된 순으로 불러옴
-        return todoRepository.findAllByOrderByDateDesc().map { it.toResponse() }
+        // TODO : 시간순으로 오름차순 or 내림차순 구현 // 기본 값이 내림차순으로 해둘 거임
+        // TODO : 작성자 검색 시 시간순 내림차순 정렬
+
+        if(writer.isNotEmpty()) return todoRepository.findAllByWriterOrderByDateDesc(writer).map { it.toResponse()}
+
+        return when (orderByTime){
+            true -> todoRepository.findAllByOrderByDateDesc().map { it.toResponse() }
+            false -> todoRepository.findAllByOrderByDateAsc().map { it.toResponse() }
+        }
+
+
     }
 
     override fun getTodoById(id: Long): TodoResponse {
