@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface TodoRepository: JpaRepository<Todo, Long> {
 
     fun findAllByOrderByDateDesc(): MutableList<Todo>
+    fun findAllByOrderByDateAsc() : MutableList<Todo>
+    fun findAllByWriterOrderByDateDesc(writer:String) : MutableList<Todo>
 }
