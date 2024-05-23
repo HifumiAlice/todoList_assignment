@@ -1,4 +1,4 @@
-### 내배캠 4주차 최민수의 TODOLIST 과제 저장소입니다.
+### 내배캠 4~6주차 최민수의 TODO 과제 저장소입니다.
 
 -----------------
 
@@ -25,4 +25,13 @@ FrameWork : Spring-Boot 3.2.5
 
 Database : postgresql
 
+------------------
+
+추가할 것
+
+API 명세서
+
+Use Case Diagram
+
+ERD(Entity Relationship Diaram
 
