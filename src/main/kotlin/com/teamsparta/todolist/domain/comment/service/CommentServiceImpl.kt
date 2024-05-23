@@ -23,9 +23,6 @@ class CommentServiceImpl(
 
     @Transactional
     override fun createComment(id: Long, request: CommentCreateRequest): CommentResponse {
-        // TODO : todo의 id가 존재하는지 확인 없으면 ModelException
-        // TODO : comment 생성
-        // TODO : todoEntity에 Comment 추가
 
         val todo : Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
 
@@ -47,17 +44,11 @@ class CommentServiceImpl(
     @Transactional
     override fun updateComment(id: Long,commentId : Long, request: CommentUpdateRequest): CommentResponse {
 
-        // TODO : todo id 확인 없으면 throw
-        // TODO : comment id 확인 없으면 throw
-        // TODO : todo에 comment가 없으면 throw
-        // TODO : comment의 writer와 password가 하나라도 다르면 throw
-        // TODO : 내용 수정
-
         val todo : Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
         val comment : Comment = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", commentId)
 
         val isCommentBelongTodo : (it : Comment) -> Boolean = {it -> it==comment}
-//        todo.comments.find ({ it : Comment -> it == comment }) ?: throw IllegalStateException("todo doesn't have comment")
+
         todo.comments.find (isCommentBelongTodo) ?: throw IllegalStateException("Todo doesn't have comment")
 
         if (request.writer != comment.writer) {
@@ -73,11 +64,6 @@ class CommentServiceImpl(
 
     @Transactional
     override fun deleteComment(id: Long, commentId : Long, request : CommentDeleteRequest) : Unit{
-        // TODO : todo id 확인 없으면 throw
-        // TODO : comment id 확인 없으면 throw
-        // TODO : todo에 comment가 없으면 throw
-        // TODO : comment의 writer와 password가 하나라도 다르면 throw
-        // TODO : 내용 삭제
 
         val todo : Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
         val comment : Comment = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", commentId)
