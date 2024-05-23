@@ -54,5 +54,6 @@ API 명세서
 -------------------------------------
 ### ERD(Entity Relationship Diaram
 
+![이미지](https://github.com/HifumiAlice/todoList_assignment/blob/main/memo/images/ERD.png)
 
 
