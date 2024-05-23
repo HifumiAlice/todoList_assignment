@@ -104,9 +104,9 @@ class TodoServiceImpl(
     }
 
     fun checkRequest(title : String, content : String, writer : String) {
-        if (title.isEmpty() || title.length > 200) throw IllegalStateException("Invalid title that is empty or long")
-        if (content.isEmpty() || content.length > 1000) throw IllegalStateException("Invalid content that is empty or long")
-        if (writer.isEmpty()) throw IllegalStateException("Invalid writer that is empty")
+        if (title.isEmpty() || title.length > 200) throw IllegalArgumentException("Invalid title that is empty or long")
+        if (content.isEmpty() || content.length > 1000) throw IllegalArgumentException("Invalid content that is empty or long")
+        if (writer.isEmpty()) throw IllegalArgumentException("Invalid writer that is empty")
     }
 
 }
