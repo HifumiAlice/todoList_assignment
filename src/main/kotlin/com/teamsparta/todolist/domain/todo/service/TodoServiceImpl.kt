@@ -42,13 +42,17 @@ class TodoServiceImpl(
         // TODO : 시간순으로 오름차순 or 내림차순 구현 // 기본 값이 내림차순으로 해둘 거임
         // TODO : 작성자 검색 시 시간순 내림차순 정렬
 
-        if(writer.isNotEmpty()) return todoRepository.findAllByWriterOrderByDateDesc(writer).map { it.toResponse()}
-
-        return when (orderByTime){
-            true -> todoRepository.findAllByOrderByDateDesc().map { it.toResponse() }
-            false -> todoRepository.findAllByOrderByDateAsc().map { it.toResponse() }
+        return if(writer.isNotEmpty()) {
+            when (orderByTime){
+                true -> todoRepository.findAllByWriterOrderByDateDesc(writer).map { it.toResponse()}
+                false -> todoRepository.findAllByWriterOrderByDateAsc(writer).map { it.toResponse()}
+            }
+        } else {
+            when (orderByTime) {
+                true -> todoRepository.findAllByOrderByDateDesc().map { it.toResponse() }
+                false -> todoRepository.findAllByOrderByDateAsc().map { it.toResponse() }
+            }
         }
-
 
     }
 

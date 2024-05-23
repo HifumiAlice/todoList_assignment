@@ -8,4 +8,5 @@ interface TodoRepository: JpaRepository<Todo, Long> {
     fun findAllByOrderByDateDesc(): MutableList<Todo>
     fun findAllByOrderByDateAsc() : MutableList<Todo>
     fun findAllByWriterOrderByDateDesc(writer:String) : MutableList<Todo>
+    fun findAllByWriterOrderByDateAsc(writer:String) : MutableList<Todo>
 }
