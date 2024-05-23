@@ -26,8 +26,8 @@ class CommentServiceImpl(
 
         val todo : Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
 
-        if (request.writer.isEmpty()) throw IllegalStateException("Please comment writer")
-        if (request.password.isEmpty()) throw IllegalStateException("Password cannot be empty")
+        if (request.writer.isEmpty()) throw IllegalArgumentException("Please comment writer")
+        if (request.password.isEmpty()) throw IllegalArgumentException("Password cannot be empty")
 
         val comment : Comment = Comment(
             comment = request.comment,
