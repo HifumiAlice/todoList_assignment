@@ -43,6 +43,16 @@ API 명세서
 
 ### Use Case Diagram
 
+![이미지](https://github.com/HifumiAlice/todoList_assignment/blob/main/memo/images/%EC%9C%A0%EC%8A%A4%EC%BC%80%EC%9D%B4%EC%8A%A4%EB%8B%A4%EC%9D%B4%EC%96%B4%EA%B7%B8%EB%9E%A8.png)
+
+-----------------------
+
+### Event Storming
+
+![이미지](https://github.com/HifumiAlice/todoList_assignment/blob/main/memo/images/EventStorming.png)
+
 -------------------------------------
 ### ERD(Entity Relationship Diaram
+
+
 
