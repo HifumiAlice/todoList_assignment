@@ -29,9 +29,9 @@ Database : postgresql
 
 ### 구현기능
 
-Todo - 상세보기
+Todo - [상세보기](https://github.com/HifumiAlice/todoList_assignment/wiki/Todo)
 
-Comment - 상세보기
+Comment - [상세보기](https://github.com/HifumiAlice/todoList_assignment/wiki/Comment)
 
 ------------------------------------------
 
