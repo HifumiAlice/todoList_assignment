@@ -37,7 +37,7 @@ Comment - [상세보기](https://github.com/HifumiAlice/todoList_assignment/wiki
 
 ### API명세서
 
-API 명세서
+API 명세서 - [상세보기](https://github.com/HifumiAlice/todoList_assignment/wiki)
 
 -------------------------------
 
