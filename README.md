@@ -43,17 +43,33 @@ API 명세서
 
 ### Use Case Diagram
 
-![이미지](https://github.com/HifumiAlice/todoList_assignment/blob/main/memo/images/%EC%9C%A0%EC%8A%A4%EC%BC%80%EC%9D%B4%EC%8A%A4%EB%8B%A4%EC%9D%B4%EC%96%B4%EA%B7%B8%EB%9E%A8.png)
+<details>
+  <summary>Use Case Diagram 이미지</summary>
+  <div markdown="1">
+    <img src = "https://github.com/HifumiAlice/todoList_assignment/blob/main/memo/images/%EC%9C%A0%EC%8A%A4%EC%BC%80%EC%9D%B4%EC%8A%A4%EB%8B%A4%EC%9D%B4%EC%96%B4%EA%B7%B8%EB%9E%A8.png" art = "https://github.com/HifumiAlice/todoList_assignment/blob/main/memo/images/%EC%9C%A0%EC%8A%A4%EC%BC%80%EC%9D%B4%EC%8A%A4%EB%8B%A4%EC%9D%B4%EC%96%B4%EA%B7%B8%EB%9E%A8.png">
+    
+  </div>
+</details>
+
 
 -----------------------
 
 ### Event Storming
-
-![이미지](https://github.com/HifumiAlice/todoList_assignment/blob/main/memo/images/EventStorming.png)
+<details>
+  <summary>Event Storming 이미지</summary>
+  <div markdown="1">
+    <img src = "https://github.com/HifumiAlice/todoList_assignment/blob/main/memo/images/EventStorming.png" art = "https://github.com/HifumiAlice/todoList_assignment/blob/main/memo/images/EventStorming.png">
+  </div>
+</details>
 
 -------------------------------------
-### ERD(Entity Relationship Diaram
+### ERD(Entity Relationship Diaram)
+<details>
+  <summary>ERD 이미지</summary>
+  <div markdown="1">
+    <img src = "https://github.com/HifumiAlice/todoList_assignment/blob/main/memo/images/ERD.png" art = "https://github.com/HifumiAlice/todoList_assignment/blob/main/memo/images/ERD.png">
+  </div>
+</details>
 
-![이미지](https://github.com/HifumiAlice/todoList_assignment/blob/main/memo/images/ERD.png)
 
 
