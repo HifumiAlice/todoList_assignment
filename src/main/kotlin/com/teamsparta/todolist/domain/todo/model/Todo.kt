@@ -2,36 +2,36 @@ package com.teamsparta.todolist.domain.todo.model
 
 import com.teamsparta.todolist.domain.comment.model.Comment
 import com.teamsparta.todolist.domain.comment.model.toResponse
-import com.teamsparta.todolist.domain.todo.dto.TodoResponse
+import com.teamsparta.todolist.domain.todo.dto.response.TodoResponse
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
-@Table(name="todo")
-class Todo (
-    @Column(name="title", nullable = false)
-    var title : String = "",
+@Table(name = "todo")
+class Todo(
+    @Column(name = "title", nullable = false)
+    var title: String = "",
 
-    @Column(name = "content" , nullable = false)
-    var content : String = "",
+    @Column(name = "content", nullable = false)
+    var content: String = "",
 
-    @Column(name="date", nullable = false)
-    var date : LocalDateTime = LocalDateTime.now(),
+    @Column(name = "date", nullable = false)
+    var date: LocalDateTime = LocalDateTime.now(),
 
     @Column(name = "writer", nullable = false)
-    var writer : String = "",
+    var writer: String = "",
 
     @Column(name = "achievement", nullable = false)
-    var achievement : Boolean = false,
+    var achievement: Boolean = false,
 
     @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "todo_id", nullable = false)
-    var comments : MutableList<Comment> = mutableListOf()
-){
+    var comments: MutableList<Comment> = mutableListOf()
+) {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id : Long? = null
+    var id: Long? = null
 
     fun addComment(comment: Comment) {
         this.comments.add(comment)
@@ -43,8 +43,8 @@ class Todo (
 
 }
 
-fun Todo.toResponse(isAll : Boolean = true) : TodoResponse {
-    when(isAll) {
+fun Todo.toResponse(isAll: Boolean = true): TodoResponse {
+    when (isAll) {
         true -> {
             return TodoResponse(
                 id = id!!,
@@ -55,6 +55,7 @@ fun Todo.toResponse(isAll : Boolean = true) : TodoResponse {
                 achievement = achievement
             )
         }
+
         false -> {
             return TodoResponse(
                 id = id!!,
@@ -63,7 +64,7 @@ fun Todo.toResponse(isAll : Boolean = true) : TodoResponse {
                 date = date,
                 writer = writer,
                 achievement = achievement,
-                comments = comments.map{it.toResponse()}.toList()
+                comments = comments.map { it.toResponse() }.toList()
             )
         }
     }

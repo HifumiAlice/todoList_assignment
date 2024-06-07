@@ -1,9 +1,9 @@
 package com.teamsparta.todolist.domain.comment.service
 
-import com.teamsparta.todolist.domain.comment.dto.CommentCreateRequest
-import com.teamsparta.todolist.domain.comment.dto.CommentDeleteRequest
-import com.teamsparta.todolist.domain.comment.dto.CommentResponse
-import com.teamsparta.todolist.domain.comment.dto.CommentUpdateRequest
+import com.teamsparta.todolist.domain.comment.dto.request.CommentCreateRequest
+import com.teamsparta.todolist.domain.comment.dto.request.CommentDeleteRequest
+import com.teamsparta.todolist.domain.comment.dto.request.CommentUpdateRequest
+import com.teamsparta.todolist.domain.comment.dto.response.CommentResponse
 import com.teamsparta.todolist.domain.comment.model.Comment
 import com.teamsparta.todolist.domain.comment.model.toResponse
 import com.teamsparta.todolist.domain.comment.repository.CommentRepository
@@ -16,20 +16,20 @@ import org.springframework.stereotype.Service
 
 @Service
 class CommentServiceImpl(
-    private val todoRepository : TodoRepository,
-    private val commentRepository : CommentRepository
+    private val todoRepository: TodoRepository,
+    private val commentRepository: CommentRepository
 
 ) : CommentService {
 
     @Transactional
     override fun createComment(id: Long, request: CommentCreateRequest): CommentResponse {
 
-        val todo : Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
+        val todo: Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
 
         if (request.writer.isEmpty()) throw IllegalArgumentException("Please comment writer")
         if (request.password.isEmpty()) throw IllegalArgumentException("Password cannot be empty")
 
-        val comment : Comment = Comment(
+        val comment: Comment = Comment(
             comment = request.comment,
             password = request.password,
             writer = request.writer
@@ -42,14 +42,15 @@ class CommentServiceImpl(
     }
 
     @Transactional
-    override fun updateComment(id: Long,commentId : Long, request: CommentUpdateRequest): CommentResponse {
+    override fun updateComment(id: Long, commentId: Long, request: CommentUpdateRequest): CommentResponse {
 
-        val todo : Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
-        val comment : Comment = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", commentId)
+        val todo: Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
+        val comment: Comment =
+            commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", commentId)
 
-        val isCommentBelongTodo : (it : Comment) -> Boolean = {it -> it==comment}
+        val isCommentBelongTodo: (it: Comment) -> Boolean = { it -> it == comment }
 
-        todo.comments.find (isCommentBelongTodo) ?: throw IllegalStateException("Todo doesn't have comment")
+        todo.comments.find(isCommentBelongTodo) ?: throw IllegalStateException("Todo doesn't have comment")
 
         if (request.writer != comment.writer) {
             throw IllegalStateException("Wrong writer")
@@ -63,10 +64,11 @@ class CommentServiceImpl(
     }
 
     @Transactional
-    override fun deleteComment(id: Long, commentId : Long, request : CommentDeleteRequest) : Unit{
+    override fun deleteComment(id: Long, commentId: Long, request: CommentDeleteRequest): Unit {
 
-        val todo : Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
-        val comment : Comment = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", commentId)
+        val todo: Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
+        val comment: Comment =
+            commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", commentId)
 
         todo.comments.find { it == comment } ?: throw IllegalStateException("Todo doesn't have comment")
 
