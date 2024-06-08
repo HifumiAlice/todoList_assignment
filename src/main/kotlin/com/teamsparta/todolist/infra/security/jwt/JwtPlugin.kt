@@ -17,7 +17,7 @@ class JwtPlugin(
     @Value("\${auth.jwt.key}")
     private val secret: String,
 
-    @Value("\${auth.jwt.issure}")
+    @Value("\${auth.jwt.issuer}")
     private val issuer: String,
 
     @Value("\${auth.jwt.expireduration}")

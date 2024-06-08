@@ -19,21 +19,21 @@ class JwtAuthenticationFilter(
 
         private val BEARER_PATTERN = Regex("^Bearer (.+?)$")
     }
+
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
         val jwt = request.getBearerToken()
-
-        if(jwt != null) {
+        if (jwt != null) {
             jwtPlugin.validateToken(jwt)
                 .onSuccess {
                     val userId = it.payload.subject.toLong()
                     val role = it.payload.get("role", String::class.java)
                     val account = it.payload.get("account", String::class.java)
 
-                    val principal = UserPrincipal(userId, role, setOf(account))
+                    val principal = UserPrincipal(userId, account, setOf(role))
 
                     val authentication = JwtAuthenticationToken(
                         principal,
@@ -44,6 +44,7 @@ class JwtAuthenticationFilter(
         }
         filterChain.doFilter(request, response)
     }
+
     private fun HttpServletRequest.getBearerToken(): String? {
         val headerValue = this.getHeader(HttpHeaders.AUTHORIZATION) ?: return null
         return BEARER_PATTERN.find(headerValue)?.groupValues?.get(1)

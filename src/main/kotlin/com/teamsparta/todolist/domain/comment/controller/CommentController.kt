@@ -7,6 +7,7 @@ import com.teamsparta.todolist.domain.comment.dto.request.CommentUpdateRequest
 import com.teamsparta.todolist.domain.comment.service.CommentService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 class CommentController(private val commentService: CommentService) {
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping()
     fun createComment(
         @PathVariable id: Long,
@@ -22,6 +24,7 @@ class CommentController(private val commentService: CommentService) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.createComment(id, request))
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PutMapping("/{comment-id}")
     fun updateComment(
         @PathVariable id: Long, @PathVariable(name = "comment-id") commentId: Long,
@@ -31,12 +34,12 @@ class CommentController(private val commentService: CommentService) {
         return ResponseEntity.status(HttpStatus.OK).body(commentService.updateComment(id, commentId, request))
     }
 
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/{comment-id}")
     fun deleteComment(
-        @PathVariable id: Long, @PathVariable(name = "comment-id") commentId: Long,
-        @RequestBody request: CommentDeleteRequest
+        @PathVariable id: Long, @PathVariable(name = "comment-id") commentId: Long
     ): ResponseEntity<Unit> {
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.deleteComment(id, commentId, request))
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.deleteComment(id, commentId))
     }
 
 }

@@ -23,4 +23,9 @@ class GlobalExceptionHandler {
     fun handleExceptionIllegarArgument(e: IllegalArgumentException): ResponseEntity<ErrorResponse> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse(e.message))
     }
+
+    @ExceptionHandler(AlreadyRegisterAccountException::class)
+    fun handleExceptionAlreadyRegisterAccount(e: AlreadyRegisterAccountException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorResponse(e.message))
+    }
 }

@@ -2,6 +2,8 @@ package com.teamsparta.todolist.domain.todo.service
 
 import com.teamsparta.todolist.domain.comment.repository.CommentRepository
 import com.teamsparta.todolist.domain.exception.ModelNotFoundException
+import com.teamsparta.todolist.domain.member.model.Member
+import com.teamsparta.todolist.domain.member.repository.MemberRepository
 import com.teamsparta.todolist.domain.todo.dto.request.TodoCreateRequest
 import com.teamsparta.todolist.domain.todo.dto.request.TodoUpdateRequest
 import com.teamsparta.todolist.domain.todo.dto.response.TodoResponse
@@ -16,47 +18,55 @@ import org.springframework.stereotype.Service
 @Service
 class TodoServiceImpl(
     private val todoRepository: TodoRepository,
-    private val commentRepository: CommentRepository
+    private val commentRepository: CommentRepository,
+    private val memberRepository: MemberRepository
 ) : TodoService {
 
-    @Transactional
-    override fun createTodo(request: TodoCreateRequest): TodoResponse {
 
-        checkRequest(request.title, request.content, request.writer)
+    override fun createTodo(request: TodoCreateRequest): TodoResponse {
+        val member: Member = memberRepository.findByIdOrNull(request.memberId) ?: throw ModelNotFoundException(
+            "member",
+            request.memberId
+        )
+        checkRequest(request.title, request.content)
 
         val todo: Todo = Todo(
             title = request.title,
             content = request.content,
-            date = request.date,
-            writer = request.writer
+            memberId = request.memberId,
         )
 
         todoRepository.save(todo)
 
-        return todo.toResponse()
+        return todo.toResponse(member = member)
     }
 
-    override fun getTodos(orderByTime: Boolean, writer: String): List<TodoResponse> {
+    override fun getTodos(orderByTime: Boolean, memberId: Long?): List<TodoResponse> {
 
-        return if (writer.isNotEmpty()) {
+        // TODO : 현재 memberId를 안받으면 아이디 찾기가 안됨 --> jwt를 통해서 memberId를 받는 방법 찾으면 개선
+        return if (memberId != null) {
             when (orderByTime) {
-                true -> todoRepository.findAllByWriterOrderByDateDesc(writer).map { it.toResponse() }
-                false -> todoRepository.findAllByWriterOrderByDateAsc(writer).map { it.toResponse() }
+                true -> todoRepository.findAllByMemberIdOrderByCreatedAtDesc(memberId)
+                    .map { it.toResponse(member = memberRepository.findByIdOne(memberId)) }
+
+                false -> todoRepository.findAllByMemberIdOrderByCreatedAtAsc(memberId)
+                    .map { it.toResponse(member = memberRepository.findByIdOne(memberId)) }
+
             }
         } else {
             when (orderByTime) {
-                true -> todoRepository.findAllByOrderByDateDesc().map { it.toResponse() }
-                false -> todoRepository.findAllByOrderByDateAsc().map { it.toResponse() }
+                true -> todoRepository.findAllByOrderByCreatedAtDesc().map { it.toResponse(member = memberRepository.findByIdOne(it.memberId)) }
+                false -> todoRepository.findAllByOrderByCreatedAtAsc().map { it.toResponse(member = memberRepository.findByIdOne(it.memberId)) }
             }
         }
-
     }
+
 
     override fun getTodoById(id: Long): TodoResponse {
 
         val todo: Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
 
-        return todo.toResponse(false)
+        return todo.toResponse(isAll = false, member = memberRepository.findByIdOrNull(todo.memberId)!!)
 
     }
 
@@ -69,19 +79,18 @@ class TodoServiceImpl(
 
         if (achievement == true) todo.achievement = true
         else {
-            if (request.writer != todo.writer) throw IllegalStateException("Writer isn't same")
-            checkRequest(request.title, request.content, "OK")
+//            if (request.writer != todo.writer) throw IllegalStateException("Writer isn't same")
+            checkRequest(request.title, request.content)
 
 
             todo.title = request.title
             todo.content = request.content
-            todo.writer = request.writer
         }
 
         todoRepository.save(todo)
 
 
-        return todo.toResponse()
+        return todo.toResponse(member = memberRepository.findByIdOne(todo.memberId))
     }
 
     @Transactional
@@ -91,10 +100,10 @@ class TodoServiceImpl(
 
     }
 
-    fun checkRequest(title: String, content: String, writer: String) {
+    fun checkRequest(title: String, content: String) {
         if (title.isEmpty() || title.length > 200) throw IllegalArgumentException("Invalid title that is empty or long")
         if (content.isEmpty() || content.length > 1000) throw IllegalArgumentException("Invalid content that is empty or long")
-        if (writer.isEmpty()) throw IllegalArgumentException("Invalid writer that is empty")
+
     }
 
 }

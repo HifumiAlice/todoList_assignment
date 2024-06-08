@@ -19,7 +19,7 @@ class SwaggerConfig {
         )
         .components(
             Components().addSecuritySchemes(
-                "Bearer Aythentication",
+                "Bearer Authentication",
                 SecurityScheme()
                     .type(SecurityScheme.Type.HTTP)
                     .scheme("Bearer")
@@ -27,7 +27,6 @@ class SwaggerConfig {
                     .`in`(SecurityScheme.In.HEADER)
                     .name("Authorization")
             )
-
         )
         .info(
             Info()
