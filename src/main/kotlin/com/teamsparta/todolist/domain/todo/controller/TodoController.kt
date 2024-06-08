@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.*
 class TodoController(private val todoService: TodoService) {
 
     @PostMapping()
-    fun createTodo(@RequestBody request: TodoCreateRequest): ResponseEntity<TodoResponse> {
+    fun createTodo(
+        @RequestBody request: TodoCreateRequest,
+        @RequestParam(name = "member_id") memberId: Long
+    ): ResponseEntity<TodoResponse> {
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(todoService.createTodo(request))
+            .body(todoService.createTodo(request, memberId))
     }
 
     @GetMapping()

@@ -23,11 +23,11 @@ class TodoServiceImpl(
 ) : TodoService {
 
     @Transactional
-    override fun createTodo(request: TodoCreateRequest): TodoResponse {
+    override fun createTodo(request: TodoCreateRequest, memberId: Long): TodoResponse {
 
-        val member: Member = memberRepository.findByIdOrNull(request.memberId) ?: throw ModelNotFoundException(
+        val member: Member = memberRepository.findByIdOrNull(memberId) ?: throw ModelNotFoundException(
             "member",
-            request.memberId
+            memberId
         )
 
         checkRequest(request.title, request.content)
@@ -35,25 +35,34 @@ class TodoServiceImpl(
         val todo: Todo = Todo(
             title = request.title,
             content = request.content,
-            memberId = request.memberId
+            memberId = memberId
         )
 
         todoRepository.save(todo)
 
-        return todo.toResponse()
+        return todo.toResponse(withComments = false, member = member)
     }
-
+    @Transactional
     override fun getTodos(orderByTime: Boolean, memberId: Long?): List<TodoResponse> {
 
         return if (memberId != null) {
+            val member: Member =
+                memberRepository.findByIdOne(memberId)
             when (orderByTime) {
-                true -> todoRepository.findAllByMemberIdOrderByCreatedAtDesc(memberId).map { it.toResponse() }
-                false -> todoRepository.findAllByMemberIdOrderByCreatedAtAsc(memberId).map { it.toResponse() }
+                true -> todoRepository.findAllByMemberIdOrderByCreatedAtDesc(memberId)
+                    .map { it.toResponse(withComments = false, member = member) }
+
+                false -> todoRepository.findAllByMemberIdOrderByCreatedAtAsc(memberId)
+                    .map { it.toResponse(withComments = false, member = member) }
             }
         } else {
+            val members : List<Member> = memberRepository.findAll()
             when (orderByTime) {
-                true -> todoRepository.findAllByOrderByCreatedAtDesc().map { it.toResponse() }
-                false -> todoRepository.findAllByOrderByCreatedAtAsc().map { it.toResponse() }
+                true -> todoRepository.findAllByOrderByCreatedAtDesc()
+                    .map { it.toResponse(withComments = false, member = members.find{ item -> item.id == it.memberId}!!) }
+
+                false -> todoRepository.findAllByOrderByCreatedAtAsc()
+                    .map { it.toResponse(withComments = false, member = members.find{ item -> item.id == it.memberId}!!) }
             }
         }
 
@@ -63,7 +72,7 @@ class TodoServiceImpl(
 
         val todo: Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
 
-        return todo.toResponse(false)
+        return todo.toResponse(true, memberRepository.findByIdOne(todo.memberId))
 
     }
 
@@ -91,7 +100,7 @@ class TodoServiceImpl(
 
         todoRepository.save(todo)
 
-        return todo.toResponse()
+        return todo.toResponse(withComments = false, memberRepository.findByIdOne(todo.memberId))
     }
 
     @Transactional

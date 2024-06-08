@@ -5,7 +5,7 @@ import com.teamsparta.todolist.domain.todo.dto.request.TodoUpdateRequest
 import com.teamsparta.todolist.domain.todo.dto.response.TodoResponse
 
 interface TodoService {
-    fun createTodo(request: TodoCreateRequest): TodoResponse
+    fun createTodo(request: TodoCreateRequest, memberId: Long): TodoResponse
     fun getTodos(orderByTime: Boolean, memberId: Long?): List<TodoResponse>
     fun getTodoById(id: Long): TodoResponse
     fun updateTodoById(id: Long, request: TodoUpdateRequest, achievement: Boolean, memberId: Long): TodoResponse

@@ -1,7 +1,7 @@
 package com.teamsparta.todolist.domain.todo.model
 
-import com.teamsparta.todolist.domain.comment.model.Comment
-import com.teamsparta.todolist.domain.comment.model.toResponse
+import com.teamsparta.todolist.domain.member.model.Member
+import com.teamsparta.todolist.domain.member.model.toResponse
 import com.teamsparta.todolist.domain.todo.dto.response.TodoResponse
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -43,26 +43,26 @@ class Todo(
 
 }
 
-fun Todo.toResponse(isAll: Boolean = true): TodoResponse {
-    when (isAll) {
-        true -> {
-            return TodoResponse(
-                id = id!!,
-                title = title,
-                content = content,
-                createdAt = createdAt,
-                memberId = memberId,
-                achievement = achievement
-            )
-        }
-
+fun Todo.toResponse(withComments: Boolean = false, member: Member): TodoResponse {
+    when (withComments) {
         false -> {
             return TodoResponse(
                 id = id!!,
                 title = title,
                 content = content,
                 createdAt = createdAt,
-                memberId = memberId,
+                member = member.toResponse(),
+                achievement = achievement
+            )
+        }
+
+        true -> {
+            return TodoResponse(
+                id = id!!,
+                title = title,
+                content = content,
+                createdAt = createdAt,
+                member = member.toResponse(),
                 achievement = achievement,
 //                comments = comments.map { it.toResponse() }.toList()
             )
