@@ -28,4 +28,9 @@ class GlobalExceptionHandler {
     fun handlerAlreadyMemberException(e: AlreadyMemberException): ResponseEntity<ErrorResponse> {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorResponse(e.message))
     }
+
+    @ExceptionHandler(UnAuthorizedException::class)
+    fun handlerUnAuthorizedException(e: UnAuthorizedException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ErrorResponse(e.message))
+    }
 }

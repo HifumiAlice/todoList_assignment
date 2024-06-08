@@ -1,11 +1,13 @@
 package com.teamsparta.todolist.domain.todo.controller
 
+import com.teamsparta.todolist.domain.member.adapter.MemberDetails
 import com.teamsparta.todolist.domain.todo.dto.request.TodoCreateRequest
 import com.teamsparta.todolist.domain.todo.dto.request.TodoUpdateRequest
 import com.teamsparta.todolist.domain.todo.dto.response.TodoResponse
 import com.teamsparta.todolist.domain.todo.service.TodoService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 
@@ -15,11 +17,12 @@ class TodoController(private val todoService: TodoService) {
 
     @PostMapping()
     fun createTodo(
+        @AuthenticationPrincipal member: MemberDetails?,
         @RequestBody request: TodoCreateRequest,
-        @RequestParam(name = "member_id") memberId: Long
     ): ResponseEntity<TodoResponse> {
+
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(todoService.createTodo(request, memberId))
+            .body(todoService.createTodo(request, member))
     }
 
     @GetMapping()
@@ -33,7 +36,10 @@ class TodoController(private val todoService: TodoService) {
     }
 
     @GetMapping("/{id}")
-    fun getTodo(@PathVariable id: Long): ResponseEntity<TodoResponse> {
+    fun getTodo(
+        @AuthenticationPrincipal member: MemberDetails?,
+        @PathVariable id: Long
+    ): ResponseEntity<TodoResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(todoService.getTodoById(id))
@@ -41,24 +47,24 @@ class TodoController(private val todoService: TodoService) {
 
     @PutMapping("/{id}")
     fun updateTodo(
+        @AuthenticationPrincipal member: MemberDetails?,
         @PathVariable("id") id: Long,
         @RequestParam(name = "achievement") achievement: Boolean = false,
-        @RequestParam(name = "member_id") memberId: Long,
         @RequestBody request: TodoUpdateRequest
     ): ResponseEntity<TodoResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(todoService.updateTodoById(id, request, achievement, memberId))
+            .body(todoService.updateTodoById(id, request, achievement, member))
     }
 
     @DeleteMapping("/{id}")
     fun deleteCardById(
+        @AuthenticationPrincipal member: MemberDetails?,
         @PathVariable("id") id: Long,
-        @RequestParam(name = "member_id") memberId: Long
     ): ResponseEntity<Unit> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(todoService.deleteTodoById(id, memberId))
+            .body(todoService.deleteTodoById(id, member))
     }
 
 }
