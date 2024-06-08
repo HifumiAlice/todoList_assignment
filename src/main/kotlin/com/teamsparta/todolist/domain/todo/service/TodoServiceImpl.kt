@@ -9,6 +9,7 @@ import com.teamsparta.todolist.domain.todo.dto.request.TodoUpdateRequest
 import com.teamsparta.todolist.domain.todo.dto.response.TodoResponse
 import com.teamsparta.todolist.domain.todo.model.Todo
 import com.teamsparta.todolist.domain.todo.model.toResponse
+import com.teamsparta.todolist.domain.todo.model.toResponseWithComments
 import com.teamsparta.todolist.domain.todo.repository.TodoRepository
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
@@ -40,7 +41,7 @@ class TodoServiceImpl(
 
         todoRepository.save(todo)
 
-        return todo.toResponse(withComments = false, member = member)
+        return todo.toResponse(member = member)
     }
     @Transactional
     override fun getTodos(orderByTime: Boolean, memberId: Long?): List<TodoResponse> {
@@ -50,19 +51,19 @@ class TodoServiceImpl(
                 memberRepository.findByIdOne(memberId)
             when (orderByTime) {
                 true -> todoRepository.findAllByMemberIdOrderByCreatedAtDesc(memberId)
-                    .map { it.toResponse(withComments = false, member = member) }
+                    .map { it.toResponse(member = member) }
 
                 false -> todoRepository.findAllByMemberIdOrderByCreatedAtAsc(memberId)
-                    .map { it.toResponse(withComments = false, member = member) }
+                    .map { it.toResponse(member = member) }
             }
         } else {
             val members : List<Member> = memberRepository.findAll()
             when (orderByTime) {
                 true -> todoRepository.findAllByOrderByCreatedAtDesc()
-                    .map { it.toResponse(withComments = false, member = members.find{ item -> item.id == it.memberId}!!) }
+                    .map { it.toResponse(member = members.find{ item -> item.id == it.memberId}!!) }
 
                 false -> todoRepository.findAllByOrderByCreatedAtAsc()
-                    .map { it.toResponse(withComments = false, member = members.find{ item -> item.id == it.memberId}!!) }
+                    .map { it.toResponse(member = members.find{ item -> item.id == it.memberId}!!) }
             }
         }
 
@@ -71,8 +72,8 @@ class TodoServiceImpl(
     override fun getTodoById(id: Long): TodoResponse {
 
         val todo: Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
-
-        return todo.toResponse(true, memberRepository.findByIdOne(todo.memberId))
+        val members: List<Member> = memberRepository.findAll()
+        return todo.toResponseWithComments(members.find{it.id == todo.memberId}!!, members)
 
     }
 
@@ -100,7 +101,7 @@ class TodoServiceImpl(
 
         todoRepository.save(todo)
 
-        return todo.toResponse(withComments = false, memberRepository.findByIdOne(todo.memberId))
+        return todo.toResponse(memberRepository.findByIdOne(todo.memberId))
     }
 
     @Transactional

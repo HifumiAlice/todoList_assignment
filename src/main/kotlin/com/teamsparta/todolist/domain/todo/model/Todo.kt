@@ -1,5 +1,7 @@
 package com.teamsparta.todolist.domain.todo.model
 
+import com.teamsparta.todolist.domain.comment.model.Comment
+import com.teamsparta.todolist.domain.comment.model.toResponse
 import com.teamsparta.todolist.domain.member.model.Member
 import com.teamsparta.todolist.domain.member.model.toResponse
 import com.teamsparta.todolist.domain.todo.dto.response.TodoResponse
@@ -24,49 +26,45 @@ class Todo(
     @Column(name = "achievement", nullable = false)
     var achievement: Boolean = false,
 
-//    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY, orphanRemoval = true)
-//    @JoinColumn(name = "todo_id", nullable = false)
-//    var comments: MutableList<Comment> = mutableListOf()
+    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "todo_id", nullable = false)
+    var comments: MutableList<Comment> = mutableListOf()
 ) {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
-//    fun addComment(comment: Comment) {
-//        this.comments.add(comment)
-//    }
-//
-//    fun removeComment(comment: Comment) {
-//        this.comments.remove(comment)
-//    }
+    fun addComment(comment: Comment) {
+        this.comments.add(comment)
+    }
 
-}
-
-fun Todo.toResponse(withComments: Boolean = false, member: Member): TodoResponse {
-    when (withComments) {
-        false -> {
-            return TodoResponse(
-                id = id!!,
-                title = title,
-                content = content,
-                createdAt = createdAt,
-                member = member.toResponse(),
-                achievement = achievement
-            )
-        }
-
-        true -> {
-            return TodoResponse(
-                id = id!!,
-                title = title,
-                content = content,
-                createdAt = createdAt,
-                member = member.toResponse(),
-                achievement = achievement,
-//                comments = comments.map { it.toResponse() }.toList()
-            )
-        }
+    fun removeComment(comment: Comment) {
+        this.comments.remove(comment)
     }
 
 }
+
+fun Todo.toResponse(member: Member): TodoResponse {
+    return TodoResponse(
+        id = id!!,
+        title = title,
+        content = content,
+        createdAt = createdAt,
+        member = member.toResponse(),
+        achievement = achievement
+    )
+}
+
+fun Todo.toResponseWithComments(member: Member, members: List<Member>): TodoResponse {
+    return TodoResponse(
+        id = id!!,
+        title = title,
+        content = content,
+        createdAt = createdAt,
+        member = member.toResponse(),
+        achievement = achievement,
+        comments = comments.map { it.toResponse(members.find { item -> it.memberId == item.id }!!) }.toList()
+    )
+}
+
