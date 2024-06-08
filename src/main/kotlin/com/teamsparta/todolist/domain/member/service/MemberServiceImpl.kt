@@ -20,15 +20,15 @@ class MemberServiceImpl(
 ) : MemberService {
 
     override fun signUp(request: MemberCreateRequest): MemberResponse {
-        // TODO : 계정 생성할 때 이미 존재하는 계정인지 확인
-        // TODO : 존재하지 않는다면 계정 생성 가능
-        // TODO : 계정 생성할 때 기본적으로 역할은 USER로 생성 --> 추후에 추가될지도?
-
+        /* TODO : 나중에 할것
+                    계정을 이메일로만 받기 및 비밀번호 제한할 것
+                    계정 생성할 때 기본적으로 역할은 USER로 생성 --> 추후에 추가될지도?
+        */
         if (memberRepository.existsByAccount(request.account)) throw AlreadyMemberException()
 
         val member: Member = Member(
             account = request.account,
-            password = request.password
+            password = passwordEncoder.encode(request.password)
         )
 
         memberRepository.save(member)
