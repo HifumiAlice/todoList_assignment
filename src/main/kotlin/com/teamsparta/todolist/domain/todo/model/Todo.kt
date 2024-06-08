@@ -15,31 +15,31 @@ class Todo(
     @Column(name = "content", nullable = false)
     var content: String = "",
 
-    @Column(name = "date", nullable = false)
-    var date: LocalDateTime = LocalDateTime.now(),
+    @Column(name = "created_at", nullable = false)
+    var createdAt: LocalDateTime = LocalDateTime.now(),
 
-    @Column(name = "writer", nullable = false)
-    var writer: String = "",
+    @Column(name = "member_id", nullable = false)
+    var memberId: Long,
 
     @Column(name = "achievement", nullable = false)
     var achievement: Boolean = false,
 
-    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "todo_id", nullable = false)
-    var comments: MutableList<Comment> = mutableListOf()
+//    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY, orphanRemoval = true)
+//    @JoinColumn(name = "todo_id", nullable = false)
+//    var comments: MutableList<Comment> = mutableListOf()
 ) {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
-    fun addComment(comment: Comment) {
-        this.comments.add(comment)
-    }
-
-    fun removeComment(comment: Comment) {
-        this.comments.remove(comment)
-    }
+//    fun addComment(comment: Comment) {
+//        this.comments.add(comment)
+//    }
+//
+//    fun removeComment(comment: Comment) {
+//        this.comments.remove(comment)
+//    }
 
 }
 
@@ -50,8 +50,8 @@ fun Todo.toResponse(isAll: Boolean = true): TodoResponse {
                 id = id!!,
                 title = title,
                 content = content,
-                date = date,
-                writer = writer,
+                createdAt = createdAt,
+                memberId = memberId,
                 achievement = achievement
             )
         }
@@ -61,10 +61,10 @@ fun Todo.toResponse(isAll: Boolean = true): TodoResponse {
                 id = id!!,
                 title = title,
                 content = content,
-                date = date,
-                writer = writer,
+                createdAt = createdAt,
+                memberId = memberId,
                 achievement = achievement,
-                comments = comments.map { it.toResponse() }.toList()
+//                comments = comments.map { it.toResponse() }.toList()
             )
         }
     }

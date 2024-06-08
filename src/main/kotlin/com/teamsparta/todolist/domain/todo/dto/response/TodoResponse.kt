@@ -10,8 +10,8 @@ data class TodoResponse(
     val title: String,
     val content: String,
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    val date: LocalDateTime,
-    val writer: String,
+    val createdAt: LocalDateTime,
+    val memberId: Long,
     val achievement: Boolean = false,
     val comments: List<CommentResponse> = listOf()
 )

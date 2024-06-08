@@ -1,8 +1,8 @@
 package com.teamsparta.todolist.domain.todo.controller
 
 import com.teamsparta.todolist.domain.todo.dto.request.TodoCreateRequest
-import com.teamsparta.todolist.domain.todo.dto.response.TodoResponse
 import com.teamsparta.todolist.domain.todo.dto.request.TodoUpdateRequest
+import com.teamsparta.todolist.domain.todo.dto.response.TodoResponse
 import com.teamsparta.todolist.domain.todo.service.TodoService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -21,12 +21,12 @@ class TodoController(private val todoService: TodoService) {
 
     @GetMapping()
     fun getTodos(
-        @RequestParam(value = "orderByTime") orderByTime: Boolean = true,
-        @RequestParam(value = "findWriter") writer: String = ""
+        @RequestParam(required = false, value = "orderByTime") orderByTime: Boolean = true,
+        @RequestParam(required = false, value = "findMemberId") memberId: Long?
     ): ResponseEntity<List<TodoResponse>> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(todoService.getTodos(orderByTime, writer))
+            .body(todoService.getTodos(orderByTime, memberId))
     }
 
     @GetMapping("/{id}")
@@ -38,20 +38,24 @@ class TodoController(private val todoService: TodoService) {
 
     @PutMapping("/{id}")
     fun updateTodo(
-        @PathVariable("id") id: Long, @RequestParam(name = "achievement") achievement: Boolean = false,
+        @PathVariable("id") id: Long,
+        @RequestParam(name = "achievement") achievement: Boolean = false,
+        @RequestParam(name = "member_id") memberId: Long,
         @RequestBody request: TodoUpdateRequest
-    )
-            : ResponseEntity<TodoResponse> {
+    ): ResponseEntity<TodoResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(todoService.updateTodoById(id, request, achievement))
+            .body(todoService.updateTodoById(id, request, achievement, memberId))
     }
 
     @DeleteMapping("/{id}")
-    fun deleteCardById(@PathVariable("id") id: Long): ResponseEntity<Unit> {
+    fun deleteCardById(
+        @PathVariable("id") id: Long,
+        @RequestParam(name = "member_id") memberId: Long
+    ): ResponseEntity<Unit> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(todoService.deleteTodoById(id))
+            .body(todoService.deleteTodoById(id, memberId))
     }
 
 }
