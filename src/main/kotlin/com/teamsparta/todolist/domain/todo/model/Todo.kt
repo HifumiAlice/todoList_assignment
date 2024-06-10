@@ -2,6 +2,8 @@ package com.teamsparta.todolist.domain.todo.model
 
 import com.teamsparta.todolist.domain.comment.model.Comment
 import com.teamsparta.todolist.domain.comment.model.toResponse
+import com.teamsparta.todolist.domain.member.model.Member
+import com.teamsparta.todolist.domain.member.model.toResponse
 import com.teamsparta.todolist.domain.todo.dto.response.TodoResponse
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -15,11 +17,11 @@ class Todo(
     @Column(name = "content", nullable = false)
     var content: String = "",
 
-    @Column(name = "date", nullable = false)
-    var date: LocalDateTime = LocalDateTime.now(),
+    @Column(name = "created_at", nullable = false)
+    var createdAt: LocalDateTime = LocalDateTime.now(),
 
-    @Column(name = "writer", nullable = false)
-    var writer: String = "",
+    @Column(name = "member_id", nullable = false)
+    var memberId: Long,
 
     @Column(name = "achievement", nullable = false)
     var achievement: Boolean = false,
@@ -43,30 +45,26 @@ class Todo(
 
 }
 
-fun Todo.toResponse(isAll: Boolean = true): TodoResponse {
-    when (isAll) {
-        true -> {
-            return TodoResponse(
-                id = id!!,
-                title = title,
-                content = content,
-                date = date,
-                writer = writer,
-                achievement = achievement
-            )
-        }
-
-        false -> {
-            return TodoResponse(
-                id = id!!,
-                title = title,
-                content = content,
-                date = date,
-                writer = writer,
-                achievement = achievement,
-                comments = comments.map { it.toResponse() }.toList()
-            )
-        }
-    }
-
+fun Todo.toResponse(member: Member): TodoResponse {
+    return TodoResponse(
+        id = id!!,
+        title = title,
+        content = content,
+        createdAt = createdAt,
+        member = member.toResponse(),
+        achievement = achievement
+    )
 }
+
+fun Todo.toResponseWithComments(member: Member, members: List<Member>): TodoResponse {
+    return TodoResponse(
+        id = id!!,
+        title = title,
+        content = content,
+        createdAt = createdAt,
+        member = member.toResponse(),
+        achievement = achievement,
+        comments = comments.map { it.toResponse(members.find { item -> it.memberId == item.id }!!) }.toList()
+    )
+}
+
