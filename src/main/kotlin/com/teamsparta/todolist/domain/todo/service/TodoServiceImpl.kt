@@ -2,6 +2,8 @@ package com.teamsparta.todolist.domain.todo.service
 
 import com.teamsparta.todolist.domain.comment.repository.CommentRepository
 import com.teamsparta.todolist.domain.exception.ModelNotFoundException
+import com.teamsparta.todolist.domain.exception.UnAuthorizedException
+import com.teamsparta.todolist.domain.member.adapter.MemberDetails
 import com.teamsparta.todolist.domain.member.model.Member
 import com.teamsparta.todolist.domain.member.repository.MemberRepository
 import com.teamsparta.todolist.domain.todo.dto.request.TodoCreateRequest
@@ -13,6 +15,7 @@ import com.teamsparta.todolist.domain.todo.model.toResponseWithComments
 import com.teamsparta.todolist.domain.todo.repository.TodoRepository
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Service
 
 
@@ -24,11 +27,13 @@ class TodoServiceImpl(
 ) : TodoService {
 
     @Transactional
-    override fun createTodo(request: TodoCreateRequest, memberId: Long): TodoResponse {
+    @PreAuthorize("hasRole('USER')")
+    override fun createTodo(request: TodoCreateRequest, memberDetails: MemberDetails?): TodoResponse {
+        memberDetails ?: throw UnAuthorizedException()
 
-        val member: Member = memberRepository.findByIdOrNull(memberId) ?: throw ModelNotFoundException(
+        val member: Member = memberRepository.findByIdOrNull(memberDetails.id) ?: throw ModelNotFoundException(
             "member",
-            memberId
+            memberDetails.id
         )
 
         checkRequest(request.title, request.content)
@@ -36,13 +41,14 @@ class TodoServiceImpl(
         val todo: Todo = Todo(
             title = request.title,
             content = request.content,
-            memberId = memberId
+            memberId = memberDetails.id
         )
 
         todoRepository.save(todo)
 
         return todo.toResponse(member = member)
     }
+
     @Transactional
     override fun getTodos(orderByTime: Boolean, memberId: Long?): List<TodoResponse> {
 
@@ -57,13 +63,13 @@ class TodoServiceImpl(
                     .map { it.toResponse(member = member) }
             }
         } else {
-            val members : List<Member> = memberRepository.findAll()
+            val members: List<Member> = memberRepository.findAll()
             when (orderByTime) {
                 true -> todoRepository.findAllByOrderByCreatedAtDesc()
-                    .map { it.toResponse(member = members.find{ item -> item.id == it.memberId}!!) }
+                    .map { it.toResponse(member = members.find { item -> item.id == it.memberId }!!) }
 
                 false -> todoRepository.findAllByOrderByCreatedAtAsc()
-                    .map { it.toResponse(member = members.find{ item -> item.id == it.memberId}!!) }
+                    .map { it.toResponse(member = members.find { item -> item.id == it.memberId }!!) }
             }
         }
 
@@ -73,21 +79,24 @@ class TodoServiceImpl(
 
         val todo: Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
         val members: List<Member> = memberRepository.findAll()
-        return todo.toResponseWithComments(members.find{it.id == todo.memberId}!!, members)
+        return todo.toResponseWithComments(members.find { it.id == todo.memberId }!!, members)
 
     }
 
     @Transactional
+    @PreAuthorize("hasRole('USER')")
     override fun updateTodoById(
         id: Long,
         request: TodoUpdateRequest,
         achievement: Boolean,
-        memberId: Long
+        memberDetails: MemberDetails?
     ): TodoResponse {
+
+        memberDetails ?: throw UnAuthorizedException()
 
         val todo: Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
 
-        if (memberId != todo.memberId) throw IllegalArgumentException("MemberId isn't same")
+        if (memberDetails.id != todo.memberId) throw UnAuthorizedException()
 
         if (todo.achievement) throw IllegalStateException("Already achievement is true")
 
@@ -105,10 +114,13 @@ class TodoServiceImpl(
     }
 
     @Transactional
-    override fun deleteTodoById(id: Long, memberId: Long) {
+    @PreAuthorize("hasRole('USER')")
+    override fun deleteTodoById(id: Long, memberDetails: MemberDetails?) {
+
+        memberDetails ?: throw UnAuthorizedException()
 
         val todo: Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
-        if (todo.memberId != memberId) throw IllegalArgumentException("MemberId isn't same")
+        if (todo.memberId != memberDetails.id) throw UnAuthorizedException()
         todoRepository.delete(todo)
 
     }

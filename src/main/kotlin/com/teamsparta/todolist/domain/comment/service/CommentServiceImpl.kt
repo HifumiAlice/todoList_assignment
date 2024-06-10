@@ -1,19 +1,21 @@
 package com.teamsparta.todolist.domain.comment.service
 
 import com.teamsparta.todolist.domain.comment.dto.request.CommentCreateRequest
-import com.teamsparta.todolist.domain.comment.dto.request.CommentDeleteRequest
 import com.teamsparta.todolist.domain.comment.dto.request.CommentUpdateRequest
 import com.teamsparta.todolist.domain.comment.dto.response.CommentResponse
 import com.teamsparta.todolist.domain.comment.model.Comment
 import com.teamsparta.todolist.domain.comment.model.toResponse
 import com.teamsparta.todolist.domain.comment.repository.CommentRepository
 import com.teamsparta.todolist.domain.exception.ModelNotFoundException
+import com.teamsparta.todolist.domain.exception.UnAuthorizedException
+import com.teamsparta.todolist.domain.member.adapter.MemberDetails
 import com.teamsparta.todolist.domain.member.model.Member
 import com.teamsparta.todolist.domain.member.repository.MemberRepository
 import com.teamsparta.todolist.domain.todo.model.Todo
 import com.teamsparta.todolist.domain.todo.repository.TodoRepository
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Service
 
 @Service
@@ -23,16 +25,26 @@ class CommentServiceImpl(
     private val memberRepository: MemberRepository
 ) : CommentService {
 
+    @PreAuthorize("hasRole('USER')")
     @Transactional
-    override fun createComment(id: Long, request: CommentCreateRequest, memberId: Long): CommentResponse {
+    override fun createComment(
+        id: Long,
+        request: CommentCreateRequest,
+        memberDetails: MemberDetails?
+    ): CommentResponse {
+
+        memberDetails ?: throw UnAuthorizedException()
 
         val todo: Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
         val member: Member =
-            memberRepository.findByIdOrNull(memberId) ?: throw ModelNotFoundException("member", memberId)
+            memberRepository.findByIdOrNull(memberDetails.id) ?: throw ModelNotFoundException(
+                "member",
+                memberDetails.id
+            )
 
         val comment: Comment = Comment(
             comment = request.comment,
-            memberId = memberId
+            memberId = memberDetails.id
         )
 
         todo.addComment(comment)
@@ -41,27 +53,32 @@ class CommentServiceImpl(
         return comment.toResponse(member)
     }
 
+    @PreAuthorize("hasRole('USER')")
     @Transactional
     override fun updateComment(
         id: Long,
         commentId: Long,
         request: CommentUpdateRequest,
-        memberId: Long
+        memberDetails: MemberDetails?
     ): CommentResponse {
+
+        memberDetails ?: throw UnAuthorizedException()
 
         val todo: Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
         val comment: Comment =
             commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("comment", commentId)
         val member: Member =
-            memberRepository.findByIdOrNull(memberId) ?: throw ModelNotFoundException("member", memberId)
+            memberRepository.findByIdOrNull(memberDetails.id) ?: throw ModelNotFoundException(
+                "member",
+                memberDetails.id
+            )
 
         val isCommentBelongTodo: (it: Comment) -> Boolean = { it -> it == comment }
 
         todo.comments.find(isCommentBelongTodo) ?: throw IllegalStateException("Todo doesn't have comment")
 
-        if (memberId != comment.memberId) {
-            throw IllegalStateException("Wrong memberId")
-        }
+        if (memberDetails.id != comment.memberId)
+            throw UnAuthorizedException()
 
         comment.comment = request.comment
         commentRepository.save(comment)
@@ -69,8 +86,11 @@ class CommentServiceImpl(
         return comment.toResponse(member)
     }
 
+    @PreAuthorize("hasRole('USER')")
     @Transactional
-    override fun deleteComment(id: Long, commentId: Long, memberId: Long): Unit {
+    override fun deleteComment(id: Long, commentId: Long, memberDetails: MemberDetails?): Unit {
+
+        memberDetails ?: throw UnAuthorizedException()
 
         val todo: Todo = todoRepository.findByIdOrNull(id) ?: throw ModelNotFoundException("todo", id)
         val comment: Comment =
@@ -79,8 +99,8 @@ class CommentServiceImpl(
         todo.comments.find { it == comment } ?: throw IllegalStateException("Todo doesn't have comment")
 
 
-        if (memberId != comment.memberId )
-            throw IllegalStateException("Wrong memberId")
+        if (memberDetails.id != comment.memberId)
+            throw UnAuthorizedException()
 
         todo.removeComment(comment)
         todoRepository.save(todo)

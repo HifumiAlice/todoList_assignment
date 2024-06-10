@@ -1,5 +1,6 @@
 package com.teamsparta.todolist.domain.member.model
 
+import com.teamsparta.todolist.domain.member.dto.parameter.UserDetailsParameter
 import com.teamsparta.todolist.domain.member.dto.response.MemberResponse
 import jakarta.persistence.*
 
@@ -31,3 +32,13 @@ fun Member.toResponse(): MemberResponse {
         role = role
     )
 }
+
+fun Member.toUserDetailsParameter(): UserDetailsParameter {
+    return UserDetailsParameter(
+        id = id!!,
+        account = account,
+        password = password,
+        role = role
+    )
+}
+
