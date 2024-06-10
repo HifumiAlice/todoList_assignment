@@ -46,7 +46,7 @@ API 명세서 - [상세보기](https://github.com/HifumiAlice/todoList_assignmen
 <details>
   <summary>Use Case Diagram 이미지</summary>
   <div markdown="1">
-    <img src = "https://github.com/HifumiAlice/todoList_assignment/blob/main/memo/images/%EC%9C%A0%EC%8A%A4%EC%BC%80%EC%9D%B4%EC%8A%A4%EB%8B%A4%EC%9D%B4%EC%96%B4%EA%B7%B8%EB%9E%A8.png" art = "https://github.com/HifumiAlice/todoList_assignment/blob/main/memo/images/%EC%9C%A0%EC%8A%A4%EC%BC%80%EC%9D%B4%EC%8A%A4%EB%8B%A4%EC%9D%B4%EC%96%B4%EA%B7%B8%EB%9E%A8.png">
+    <img src = "https://github.com/HifumiAlice/todoList_assignment/blob/dev/memo/images/%EC%9C%A0%EC%8A%A4%EC%BC%80%EC%9D%B4%EC%8A%A4%EB%8B%A4%EC%9D%B4%EC%96%B4%EA%B7%B8%EB%9E%A8-2.png" art = "https://github.com/HifumiAlice/todoList_assignment/blob/main/memo/images/%EC%9C%A0%EC%8A%A4%EC%BC%80%EC%9D%B4%EC%8A%A4%EB%8B%A4%EC%9D%B4%EC%96%B4%EA%B7%B8%EB%9E%A8.png">
     
   </div>
 </details>
@@ -58,7 +58,7 @@ API 명세서 - [상세보기](https://github.com/HifumiAlice/todoList_assignmen
 <details>
   <summary>Event Storming 이미지</summary>
   <div markdown="1">
-    <img src = "https://github.com/HifumiAlice/todoList_assignment/blob/main/memo/images/EventStorming.png" art = "https://github.com/HifumiAlice/todoList_assignment/blob/main/memo/images/EventStorming.png">
+    <img src = "https://github.com/HifumiAlice/todoList_assignment/blob/dev/memo/images/EventStorming-2.png" art = "https://github.com/HifumiAlice/todoList_assignment/blob/main/memo/images/EventStorming.png">
   </div>
 </details>
 
@@ -67,7 +67,7 @@ API 명세서 - [상세보기](https://github.com/HifumiAlice/todoList_assignmen
 <details>
   <summary>ERD 이미지</summary>
   <div markdown="1">
-    <img src = "https://github.com/HifumiAlice/todoList_assignment/blob/main/memo/images/ERD.png" art = "https://github.com/HifumiAlice/todoList_assignment/blob/main/memo/images/ERD.png">
+    <img src = "https://github.com/HifumiAlice/todoList_assignment/blob/dev/memo/images/ERD-2.png" art = "https://github.com/HifumiAlice/todoList_assignment/blob/main/memo/images/ERD.png">
   </div>
 </details>
 
