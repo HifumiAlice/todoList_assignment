@@ -15,6 +15,7 @@ import com.teamsparta.todolist.domain.todo.model.Todo
 import com.teamsparta.todolist.domain.todo.repository.TodoRepository
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Service
 
 @Service
@@ -24,6 +25,7 @@ class CommentServiceImpl(
     private val memberRepository: MemberRepository
 ) : CommentService {
 
+    @PreAuthorize("hasRole('USER')")
     @Transactional
     override fun createComment(
         id: Long,
@@ -51,6 +53,7 @@ class CommentServiceImpl(
         return comment.toResponse(member)
     }
 
+    @PreAuthorize("hasRole('USER')")
     @Transactional
     override fun updateComment(
         id: Long,
@@ -83,6 +86,7 @@ class CommentServiceImpl(
         return comment.toResponse(member)
     }
 
+    @PreAuthorize("hasRole('USER')")
     @Transactional
     override fun deleteComment(id: Long, commentId: Long, memberDetails: MemberDetails?): Unit {
 
