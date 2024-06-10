@@ -5,13 +5,17 @@
 ### 프로젝트소개
 
 이 프로젝트는 내배캠 과제 Todo 게시판의 백엔드 처리를 담당합니다.
+
 Todo 생성, 조회, 수정 및 삭제와 Todo 글의 댓글 생성, 수정, 삭제를 구현했습니다.
+
++ 추가 : 회원가입과 로그인 기능
 
 ---------
 
 ### 개발기간
 2024-05-06 ~ 2024-05-24 / 3주간
 
++ 추가 : 2024-06-03 ~ 2024-06-10 / 1주간
 ------------
 
 ### 개발환경
@@ -33,6 +37,7 @@ Todo - [상세보기](https://github.com/HifumiAlice/todoList_assignment/wiki/To
 
 Comment - [상세보기](https://github.com/HifumiAlice/todoList_assignment/wiki/Comment)
 
+Member - [상세보기](https://github.com/HifumiAlice/todoList_assignment/wiki/Member)
 ------------------------------------------
 
 ### API명세서
